@@ -1,0 +1,175 @@
+# Starship configuration file
+
+# Custom format
+format = '''
+[╭╼ ](bold #7c4cb3)$status$battery$shell$os$time
+[├╼ ](bold #7c4cb3)$username$hostname$sudo$directory$git_branch$git_status$package$aws$azure$c$cmake$crystal$dart$dotnet$golang$java$julia$kotlin$lua$nodejs$perl$php$python$ruby$rust$cmd_duration
+[╰╼> ](bold #7c4cb3)'''
+
+# Wait 10 milliseconds for starship to check files under the current directory.
+scan_timeout = 10
+
+# Add newlines between prompts
+add_newline = true
+
+# Status
+[status]
+format = "[\\[$symbol $common_meaning$signal_name$maybe_int\\]]($style) "
+style ="red"
+symbol = "🔴"
+success_symbol = "🟢"
+not_executable_symbol='🚫'
+sigint_symbol='🧱'
+signal_symbol='⚡'
+map_symbol = true
+
+disabled = false
+
+# Battery
+[battery]
+full_symbol = "🔋"
+charging_symbol = "⚡"
+discharging_symbol = "💀"
+format = "[$symbol$percentage]($style) "
+disabled = false
+
+[[battery.display]]
+threshold = 100
+style = "bold #20a712"
+
+# Shell
+[shell]
+format = "using [$indicator]($style) "
+fish_indicator = "fish"
+bash_indicator = 'bash'
+zsh_indicator = 'zsh'
+powershell_indicator = 'pwsh'
+cmd_indicator = "cmd"
+style = "bold yellow"
+disabled = false
+
+# Operating System
+[os]
+format = "on [$symbol$name]($style) "
+style = "yellow bold"
+disabled = false
+
+[os.symbols]
+Alpaquita = "🔔 "
+Alpine = "🏔️ "
+Amazon = "🙂 "
+Android = "🤖 "
+Arch = "🎗️ "
+Artix = "🎗️ "
+CentOS = "💠 "
+Debian = "🌀 "
+DragonFly = "🐉 "
+Emscripten = "🔗 "
+EndeavourOS = "🚀 "
+Fedora = "🎩 "
+FreeBSD = "😈 "
+Garuda = "🦅 "
+Gentoo = "🗜️ "
+HardenedBSD = "🛡️ "
+Illumos = "🐦 "
+Linux = "🐧 "
+Mabox = "📦 "
+Macos = "🍎 "
+Manjaro = "🥭 "
+Mariner = "🌊 "
+MidnightBSD = "🌘 "
+Mint = "🌿 "
+NetBSD = "🚩 "
+NixOS = "❄️ "
+OpenBSD = "🐡 "
+OpenCloudOS = "☁️ "
+openEuler = "🦉 "
+openSUSE = "🦎 "
+OracleLinux = "🦴 "
+Pop = "🍭 "
+Raspbian = "🍓 "
+Redhat = "🎩 "
+RedHatEnterprise = "🎩 "
+Redox = "🧪 "
+Solus = "⛵ "
+SUSE = "🦎 "
+Ubuntu = "🎯 "
+Unknown = "❓ "
+Windows = "🪟  "
+
+# Time
+[time]
+disabled = false
+
+# Username
+[username]
+style_root = "bold red"
+style_user = "bold #20a712"
+format = "[$user]($style)"
+show_always = true
+
+# Hostname
+[hostname]
+ssh_only = false
+ssh_symbol = "🔑 "
+trim_at = ""
+format = "[$ssh_symbol](bold blue)[@$hostname]($style) "
+style = "bold #20a712"
+disabled = false
+
+# Sudo
+[sudo]
+format = "[as $symbol]($style)"
+symbol = "🧙 "
+style = "bold blue"
+disabled = false
+
+# Directory
+[directory]
+truncation_length = 0
+truncate_to_repo = false
+use_os_path_sep = true
+format = "at [$path]($style)[$read_only]($read_only_style) "
+repo_root_format = "in [repo:$repo_root]($repo_root_style) at [$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
+style = "purple"
+repo_root_style = "purple"
+read_only = "🔒"
+read_only_style = "bold red"
+disabled = false
+
+# Git Branch
+[git_branch]
+format = "on [$symbol$branch(:$remote_branch)]($style) "
+symbol = ""
+style = "bold purple"
+disabled = false
+
+# Git Status
+[git_status]
+format = "[\\[$ahead_behind$renamed$conflicted$stashed$deleted$untracked$modified$staged\\]]($style) "
+conflicted = " ✖$count"
+ahead = "⇡$count"
+behind = "⇣$count"
+renamed = "»$count"
+staged = " +$count"
+modified = " ~$count"
+deleted = " -$count"
+untracked = " ?$count"
+stashed = " ⚑$count"
+style = "bold"
+disabled = false
+
+# Package
+[package]
+format = "[build $symbol$version]($style) "
+symbol = "📦 "
+style = "bold #ef9a00"
+disabled = false
+
+# Command Duration
+[cmd_duration]
+min_time = 10
+format = "took [$duration]($style)"
+show_milliseconds = true
+style = "bold yellow"
+disabled = false
