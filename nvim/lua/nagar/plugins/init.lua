@@ -6,12 +6,6 @@ return {
         end
     },
     {
-        'tpope/vim-fugitive',
-        config = function()
-            vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
-        end
-    },
-    {
         'echasnovski/mini.animate',
         version = '*',
         config = function()
@@ -45,5 +39,35 @@ return {
     },
     {
         'github/copilot.vim'
+    },
+    {
+        'numToStr/Comment.nvim',
+        opts = {},
+        config = function()
+            require('Comment').setup()
+        end
+    },
+    {
+        'rcarriga/nvim-notify',
+        config = function()
+            require('notify').setup({
+                stages = "slide",
+                timeout = 5000,
+                background_colour = "#000000",
+                text_colour = "#ffffff"
+            })
+            vim.notify = require('notify')
+        end
+    },
+    {
+        'nvim-lualine/lualine.nvim',
+        dependencies = { 'nvim-tree/nvim-web-devicons' },
+        config = function()
+            require('lualine').setup({
+                options = {
+                    theme = 'nord'
+                }
+            })
+        end
     }
 }

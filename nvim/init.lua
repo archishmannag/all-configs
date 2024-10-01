@@ -22,6 +22,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
     end
 })
 
+vim.opt.termguicolors = true
 vim.o.number = true
 vim.o.relativenumber = true
 vim.o.tabstop = 4
@@ -44,6 +45,28 @@ vim.cmd [[
 
 -- Key mappings for ; and \n to format
 vim.api.nvim_set_keymap('i', ';', ';<cmd>lua vim.lsp.buf.format({ async = true })<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('i', '<CR>', '<CR><cmd>lua vim.lsp.buf.format({ async = true })<CR>',
+vim.api.nvim_set_keymap('i', '<CR>', '<CR><cmd>lua vim.lsp.buf.format({ async = true })<CR><CR>',
     { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.format()<CR>', { noremap = true, silent = true })
+
+
+-- Key mappings for Ctrl+PageDown and Ctrl+PageUp to cycle tabs
+-- Normal mode mapping
+vim.api.nvim_set_keymap('n', '<C-PageDown>', ':tabnext<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-PageUp>', ':tabprevious<CR>', { noremap = true, silent = true })
+
+-- Insert mode mapping
+vim.api.nvim_set_keymap('i', '<C-PageDown>', '<Esc>:tabnext<CR>i', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<C-PageUp>', '<Esc>:tabprevious<CR>i', { noremap = true, silent = true })
+
+-- Visual mode mapping
+vim.api.nvim_set_keymap('v', '<C-PageDown>', '<Esc>:tabnext<CR>gv', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<C-PageUp>', '<Esc>:tabprevious<CR>gv', { noremap = true, silent = true })
+
+-- Command mode mapping
+vim.api.nvim_set_keymap('c', '<C-PageDown>', '<C-C>:tabnext<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('c', '<C-PageUp>', '<C-C>:tabprevious<CR>', { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap('t', '<C-PageDown>', '<C-\\><C-N>:tabnext<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('t', '<C-PageUp>', '<C-\\><C-N>:tabprevious<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>nt', '<:tabnew<CR>', { noremap = true, silent = true })
