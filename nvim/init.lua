@@ -22,6 +22,25 @@ vim.api.nvim_create_autocmd("BufEnter", {
     end
 })
 
+vim.cmd [[
+highlight NonText ctermfg=grey guifg=grey
+    highlight SpecialKey ctermfg=grey guifg=grey
+]]
+
+
+-- Enable list mode to show whitespace characters
+vim.opt.list = true
+
+-- Customize the listchars option
+vim.opt.listchars = {
+    tab = '▸ ', -- Tab character
+    space = '·', -- Space character
+    trail = '·', -- Trailing space
+    extends = '⟩', -- Character to show at the end of a line that extends beyond the window
+    precedes = '⟨', -- Character to show at the beginning of a line that extends beyond the window
+    -- eol = '↲', -- End-of-line character
+}
+
 vim.opt.termguicolors = true
 vim.o.number = true
 vim.o.relativenumber = true
@@ -49,6 +68,9 @@ vim.api.nvim_set_keymap('i', '<CR>', '<CR><cmd>lua vim.lsp.buf.format({ async = 
     { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.format()<CR>', { noremap = true, silent = true })
 
+-- Key mappings for Ctrl+l and Ctrl+h to switch between windows
+vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', { noremap = true, silent = true })
 
 -- Key mappings for Ctrl+PageDown and Ctrl+PageUp to cycle tabs
 -- Normal mode mapping
@@ -69,4 +91,7 @@ vim.api.nvim_set_keymap('c', '<C-PageUp>', '<C-C>:tabprevious<CR>', { noremap = 
 
 vim.api.nvim_set_keymap('t', '<C-PageDown>', '<C-\\><C-N>:tabnext<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('t', '<C-PageUp>', '<C-\\><C-N>:tabprevious<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>nt', '<:tabnew<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>nt', '<:tabnew<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>nt', '<:tabnew<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>nt', '<:tabnew<CR>', { noremap = true, silent = true })

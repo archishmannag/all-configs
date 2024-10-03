@@ -29,7 +29,7 @@ return {
                     require('lspconfig').clangd.setup({
                         cmd = { 'clangd', '--fallback-style=none' },
                         init_options = {
-                            fallbackFlags = { '--style=file' },
+                            -- fallbackFlags = { '--style=file' },
                         },
                     })
                 end
