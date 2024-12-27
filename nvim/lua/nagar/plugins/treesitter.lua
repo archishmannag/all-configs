@@ -1,27 +1,44 @@
 return {
-	"nvim-treesitter/nvim-treesitter",
-	build = ":TSUpdate",
-	config = function()
-		require'nvim-treesitter.configs'.setup {
-			-- A list of parser names, or "all" (the listed parsers MUST always be installed)
-			ensure_installed = { "c", "javascript", "typescript", "cmake", "cpp", "java", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline" },
+    {
+        'nvim-treesitter/nvim-treesitter-refactor',
+        dependencies = {
+            'nvim-treesitter/nvim-treesitter',
+        },
+    },
+    {
+        "nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate",
+        config = function()
+            require 'nvim-treesitter.configs'.setup {
+                modules = {},
+                ignore_install = {},
+                -- A list of parser names, or "all" (the listed parsers MUST always be installed)
+                ensure_installed = { "c", "javascript", "typescript", "cmake", "cpp", "java", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline" },
 
-			-- Install parsers synchronously (only applied to `ensure_installed`)
-			sync_install = false,
+                -- Install parsers synchronously (only applied to `ensure_installed`)
+                sync_install = false,
 
-			-- Automatically install missing parsers when entering buffer
-			-- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-			auto_install = true,
+                -- Automatically install missing parsers when entering buffer
+                -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+                auto_install = true,
 
-			indent = {
-				enable = true
-			},
-
-			highlight = {
-				enable = true,
-
-				additional_vim_regex_highlighting = false,
-			},
-		}
-	end
+                indent = {
+                    enable = true
+                },
+                highlight = {
+                    enable = true,
+                    additional_vim_regex_highlighting = false,
+                },
+                refactor = {
+                    smart_rename = {
+                        enable = true,
+                        -- Assign keymaps to false to disable them, e.g. `smart_rename = false`.
+                        keymaps = {
+                            smart_rename = "grr",
+                        },
+                    },
+                },
+            }
+        end
+    }
 }

@@ -1,26 +1,28 @@
 require("nagar")
 
--- nvim-tree is also there in modified buffers so this function filter it out
-local modifiedBufs = function(bufs)
-    local t = 0
-    for _, v in pairs(bufs) do
-        if v.name:match("NvimTree_") == nil then
-            t = t + 1
-        end
-    end
-    return t
-end
-
-vim.api.nvim_create_autocmd("BufEnter", {
-    nested = true,
+vim.api.nvim_create_autocmd("QuitPre", {
     callback = function()
-        if #vim.api.nvim_list_wins() == 1 and
-            vim.api.nvim_buf_get_name(0):match("NvimTree_") ~= nil and
-            modifiedBufs(vim.fn.getbufinfo({ bufmodified = 1 })) == 0 then
-            vim.cmd "quit"
+        local tree_wins = {}
+        local floating_wins = {}
+        local wins = vim.api.nvim_list_wins()
+        for _, w in ipairs(wins) do
+            local bufname = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(w))
+            if bufname:match("NvimTree_") ~= nil then
+                table.insert(tree_wins, w)
+            end
+            if vim.api.nvim_win_get_config(w).relative ~= '' then
+                table.insert(floating_wins, w)
+            end
+        end
+        if 1 == #wins - #floating_wins - #tree_wins then
+            -- Should quit, so we close all invalid windows.
+            for _, w in ipairs(tree_wins) do
+                vim.api.nvim_win_close(w, true)
+            end
         end
     end
 })
+
 
 vim.cmd [[
 highlight NonText ctermfg=grey guifg=grey
@@ -63,14 +65,16 @@ vim.cmd [[
 ]]
 
 -- Key mappings for ; and \n to format
-vim.api.nvim_set_keymap('i', ';', ';<cmd>lua vim.lsp.buf.format({ async = true })<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('i', '<CR>', '<CR><cmd>lua vim.lsp.buf.format({ async = true })<CR><CR>',
-    { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('i', ';', ';<cmd>lua vim.lsp.buf.format({ async = true })<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('i', '<CR>', '<cmd>lua vim.lsp.buf.format({ async = true })<CR><CR>',
+--     { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.format()<CR>', { noremap = true, silent = true })
 
--- Key mappings for Ctrl+l and Ctrl+h to switch between windows
+-- Key mappings for Ctrl+(hjkl) to switch between windows
 vim.api.nvim_set_keymap('n', '<C-l>', '<C-w>l', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-h>', '<C-w>h', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-j>', '<C-w>j', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-k>', '<C-w>k', { noremap = true, silent = true })
 
 -- Key mappings for Ctrl+PageDown and Ctrl+PageUp to cycle tabs
 -- Normal mode mapping
@@ -92,6 +96,6 @@ vim.api.nvim_set_keymap('c', '<C-PageUp>', '<C-C>:tabprevious<CR>', { noremap = 
 vim.api.nvim_set_keymap('t', '<C-PageDown>', '<C-\\><C-N>:tabnext<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('t', '<C-PageUp>', '<C-\\><C-N>:tabprevious<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>nt', '<:tabnew<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>nt', '<:tabnew<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>nt', '<:tabnew<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<leader>nt', '<:tabnew<CR>', { noremap = true, silent = true })
+
+-- Command to open terminal in horizontal split
+vim.api.nvim_set_keymap('n', '<leader>th', ':split term://fish<CR>', { noremap = true, silent = true })
