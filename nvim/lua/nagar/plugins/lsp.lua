@@ -27,7 +27,7 @@ return {
                 end,
                 ['clangd'] = function()
                     require('lspconfig').clangd.setup({
-                        cmd = { 'clangd', '--fallback-style=none' },
+                        cmd = { 'clangd', '--clang-tidy', '--log=verbose', '--background-index', '--fallback-style=none', '--experimental-modules-support' },
                         init_options = {
                             -- fallbackFlags = { '--style=file' },
                         },
