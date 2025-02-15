@@ -19,8 +19,8 @@ return {
                 end
                 return "build/${variant:buildType}"
             end,                                         -- this is used to specify generate directory for cmake, allows macro expansion, can be a string or a function returning the string, relative to cwd.
-            cmake_soft_link_compile_commands = true,     -- this will automatically make a soft link from compile commands file to project root dir
-            cmake_compile_commands_from_lsp = false,     -- this will automatically set compile commands file location using lsp, to use it, please set `cmake_soft_link_compile_commands` to false
+            cmake_soft_link_compile_commands = false,    -- this will automatically make a soft link from compile commands file to project root dir
+            cmake_compile_commands_from_lsp = true,      -- this will automatically set compile commands file location using lsp, to use it, please set `cmake_soft_link_compile_commands` to false
             cmake_kits_path = nil,                       -- this is used to specify global cmake kits path, see CMakeKits for detailed usage
             cmake_variants_message = {
                 short = { show = true },                 -- whether to show short message
@@ -34,9 +34,23 @@ return {
                 runInTerminal = true,
                 console = "integratedTerminal",
             },
-            cmake_executor = {                          -- executor to use
-                name = "overseer",                      -- name of the executor
-                opts = {},                              -- the options the executor will get, possible values depend on the executor type. See `default_opts` for possible values.
+            cmake_executor = {     -- executor to use
+                name = "overseer", -- name of the executor
+                opts = {
+                    new_task_opts = {
+                        strategy = {
+                            "toggleterm",
+                            direction = "horizontal",
+                            autos_croll = true,
+                            quit_on_exit = "success"
+                        }
+                    },     -- options to pass into the `overseer.new_task` command
+                    on_new_task = function(_)
+                        require("overseer").open(
+                            { enter = false, direction = "right" }
+                        )
+                    end,                                -- a function that gets overseer.Task when it is created, before calling `task:start`
+                },                                      -- the options the executor will get, possible values depend on the executor type. See `default_opts` for possible values.
                 default_opts = {                        -- a list of default and possible values for executors
                     quickfix = {
                         show = "always",                -- "always", "only_on_error"
@@ -60,7 +74,7 @@ return {
                                 quit_on_exit = "success"
                             }
                         }, -- options to pass into the `overseer.new_task` command
-                        on_new_task = function(task)
+                        on_new_task = function(_)
                             require("overseer").open(
                                 { enter = false, direction = "right" }
                             )

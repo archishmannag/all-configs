@@ -1,0 +1,11 @@
+# stylua.toml
+
+# Indent settings
+indent_type = "Spaces"
+indent_width = 4
+
+# Default behavior for other settings
+column_width = 80
+line_endings = "Unix"
+quote_style = "AutoPreferDouble"
+

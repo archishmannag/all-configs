@@ -1,9 +1,9 @@
 return {
     {
-        'akinsho/toggleterm.nvim',
+        "akinsho/toggleterm.nvim",
         version = "*",
         config = function()
-            require('toggleterm').setup({
+            require("toggleterm").setup({
                 size = 20,
                 open_mapping = [[<c-\>]],
                 hide_numbers = true,
@@ -13,11 +13,35 @@ return {
                 start_in_insert = true,
                 insert_mappings = true,
                 persist_size = true,
-                direction = 'horizontal',
+                direction = "horizontal",
                 close_on_exit = true,
-                shell = vim.o.shell,
+                shell = "fish",
                 auto_scroll = true,
             })
-        end
-    }
+            vim.api.nvim_create_augroup(
+                "disable_folding_toggleterm",
+                { clear = true }
+            )
+
+            vim.api.nvim_create_autocmd("FileType", {
+                group = "disable_folding_toggleterm",
+                pattern = "toggleterm",
+                callback = function(ev)
+                    local bufnr = ev.buf
+                    vim.api.nvim_set_option_value(
+                        "foldmethod",
+                        "manual",
+                        { --[[ buf = bufnr ]]
+                        }
+                    )
+                    vim.api.nvim_set_option_value(
+                        "foldtext",
+                        "foldtext()",
+                        { --[[ buf = bufnr ]]
+                        }
+                    )
+                end,
+            })
+        end,
+    },
 }

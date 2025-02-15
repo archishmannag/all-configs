@@ -24,6 +24,10 @@ return {
             local dapui = require('dapui')
             dapui.setup()
 
+            vim.api.nvim_set_hl(0, "DapStoppedLine", { default = true, link = "Visual" })
+            vim.fn.sign_define('DapBreakpoint', { text = '🛑', texthl = 'DapBreakpoint', linehl = '', numhl = '' })
+            vim.fn.sign_define('DapStopped', { text = '→', texthl = 'DapStopped', linehl = 'DapStoppedLine', numhl = '' })
+
             dap.listeners.before.attach.dapui_config = function()
                 dapui.open()
             end
@@ -81,13 +85,16 @@ return {
                         return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
                     end,
                     cwd = '${workspaceFolder}',
-                    stopAtBeginningOfMainSubprogram = true,
+                    stopAtBeginningOfMainSubprogram = false,
                 },
             }
 
             vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, {})
             vim.keymap.set('n', '<leader>dc', dap.continue, {})
             vim.keymap.set('n', '<leader>dt', dapui.toggle, {})
+            vim.keymap.set('n', '<leader>dn', dap.step_over, {})
+            vim.keymap.set('n', '<leader>di', dap.step_into, {})
+            vim.keymap.set('n', '<leader>do', dap.step_out, {})
             vim.keymap.set('n', '<F5', dap.continue, {})
             vim.keymap.set('n', '<F10>', dap.step_over, {})
             vim.keymap.set('n', '<F11>', dap.step_into, {})
@@ -100,7 +107,38 @@ return {
         end,
     },
     {
-        'theHamsta/nvim-dap-virtual-text'
+        'theHamsta/nvim-dap-virtual-text',
+        config = function()
+            require("nvim-dap-virtual-text").setup {
+                enabled = true,
+                enable_commands = true,
+                highlight_changed_variables = true,
+                highlight_new_as_changed = false,
+                show_stop_reason = true,
+                commented = false,
+                only_first_definition = true,
+                all_references = false,
+                clear_on_continue = false,
+                virt_text_pos = 'eol',
+                all_frames = false,
+                text_prefix = ' ',
+                separator = ' ',
+                error_prefix = ' ',
+                info_prefix = ' ',
+                virt_lines = false,
+                virt_lines_above = true,
+                display_callback = function(variable, buf, stackframe, node, options)
+                    -- by default, strip out new line characters
+                    --
+                    if options.virt_text_pos == 'inline' then
+                        return ' = ' .. variable.value:gsub('%s+', ' ')
+                    else
+                        return variable.name .. ' = ' .. variable.value:gsub('%s+', ' ')
+                    end
+                end,
+                filter_references_pattern = nil,
+            }
+        end
     },
     {
         'jay-babu/mason-nvim-dap.nvim',

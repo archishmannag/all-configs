@@ -54,9 +54,10 @@ return {
                 stages = "slide",
                 timeout = 5000,
                 background_colour = "#000000",
-                text_colour = "#ffffff"
+                text_colour = "#ffffff",
+                merge_duplicates = true,
             })
             vim.notify = require('notify')
         end
     },
-    }
+}
