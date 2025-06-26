@@ -6,14 +6,19 @@ return {
     },
     {
         "williamboman/mason-lspconfig.nvim",
+        version = "1.32.0",
+        -- opts = {},
+        -- dependencies = {
+        --     { "mason-org/mason.nvim", opts = {} },
+        --     "neovim/nvim-lspconfig",
+        -- },
         config = function()
             require("mason").setup()
             local config = require("mason-lspconfig")
             config.setup({
-                ensure_installed = { "clangd" },
+                ensure_installed = {},
                 automatic_installation = true,
             })
-
             -- Set the floating window background color
             vim.cmd(
                 [[autocmd! ColorScheme * highlight NormalFloat guibg=#1f2335]]
@@ -49,9 +54,14 @@ return {
             local on_attach = function(_, _)
                 vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, {})
                 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, {})
-                vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
-                vim.keymap.set("n", "gi", vim.lsp.buf.implementation, {})
-                vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
+                vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, {})
+                vim.keymap.set(
+                    "n",
+                    "<leader>gi",
+                    vim.lsp.buf.implementation,
+                    {}
+                )
+                vim.keymap.set("n", "<leader>K", vim.lsp.buf.hover, {})
             end
 
             -- LSP setup (default + custom)
@@ -60,6 +70,53 @@ return {
                     local capabilities =
                         require("cmp_nvim_lsp").default_capabilities()
                     require("lspconfig")[server_name].setup({
+                        on_attach = on_attach,
+                        handlers = handlers,
+                        capabilities = capabilities,
+                    })
+                end,
+                ["ltex"] = function()
+                    local capabilities =
+                        require("cmp_nvim_lsp").default_capabilities()
+                    require("lspconfig").ltex.setup({
+                        filetypes = { "tex", "markdown", "text" },
+                        init_options = {
+                            enableTextCompletion = true,
+                            additionalRules = {
+                                enablePickyRules = true,
+                            },
+                        },
+                        on_attach = on_attach,
+                        handlers = handlers,
+                        capabilities = capabilities,
+                    })
+                end,
+                ["texlab"] = function()
+                    local capabilities =
+                        require("cmp_nvim_lsp").default_capabilities()
+                    require("lspconfig").texlab.setup({
+                        filetypes = { "tex", "plaintex", "bib" },
+                        init_options = {
+                            texlab = {
+                                build = {
+                                    executable = "vimtex",
+                                    onSave = true,
+                                },
+                                chktex = {
+                                    onOpenAndSave = true,
+                                },
+                                diagnosticsDelay = 300,
+                                forwardSearch = {
+                                    executable = "okular",
+                                    args = {
+                                        "--unique",
+                                        "--synctex-forward",
+                                        "%l:1:%f",
+                                        "%p",
+                                    },
+                                },
+                            },
+                        },
                         on_attach = on_attach,
                         handlers = handlers,
                         capabilities = capabilities,
@@ -98,12 +155,18 @@ return {
                         require("cmp_nvim_lsp").default_capabilities()
                     require("lspconfig").clangd.setup({
                         cmd = {
-                            "clangd",
+                            "/usr/bin/clangd",
                             "--clang-tidy",
-                            "--log=verbose",
-                            "--background-index",
                             "--fallback-style=none",
                             "--experimental-modules-support",
+                            "--all-scopes-completion",
+                            "--background-index",
+                            "--completion-parse=always",
+                            "--completion-style=bundled",
+                            "--enable-config",
+                            "--function-arg-placeholders",
+                            "--pch-storage=memory",
+                            "-j=8",
                         },
                         init_options = {
                             -- fallbackFlags = { '--style=file' },
@@ -168,7 +231,7 @@ return {
                     ["<CR>"] = cmp.mapping(function(fallback)
                         if cmp.visible() then
                             if luasnip.expandable() then
-                                luasnip.expand()
+                                luasnip.expand({})
                             else
                                 cmp.confirm({
                                     select = true,

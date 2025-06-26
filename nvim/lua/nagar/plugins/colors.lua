@@ -27,7 +27,6 @@
 --     priority = 1000,
 --     config = function()
 --         vim.cmd.colorscheme("synthweave")
---         -- transparent version
 --         -- vim.cmd.colorscheme("synthweave-transparent")
 --     end
 -- }
