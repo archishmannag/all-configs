@@ -1,3 +1,4 @@
+local helpers = require("nagar/plugins/resources/helper")
 return {
     {
         "folke/lazydev.nvim",
@@ -53,6 +54,63 @@ return {
             end
             dap.listeners.before.event_exited.dapui_config = function()
                 dapui.close()
+            end
+
+            dap.listeners.before["event_progressStart"]["progress-notifications"] = function(
+                session,
+                body
+            )
+                local notif_data =
+                    helpers.get_notif_data("dap", body.progressId)
+
+                local message =
+                    helpers.format_message(body.message, body.percentage)
+                notif_data.notification = vim.notify(message, "info", {
+                    title = helpers.format_title(
+                        body.title,
+                        session.config.type
+                    ),
+                    icon = helpers.spinner_frames[1],
+                    timeout = false,
+                    hide_from_history = false,
+                })
+
+                notif_data.notification.spinner = 1
+                helpers.update_spinner("dap", body.progressId)
+            end
+
+            dap.listeners.before["event_progressUpdate"]["progress-notifications"] = function(
+                session,
+                body
+            )
+                local notif_data =
+                    helpers.get_notif_data("dap", body.progressId)
+                notif_data.notification = vim.notify(
+                    helpers.format_message(body.message, body.percentage),
+                    "info",
+                    {
+                        replace = notif_data.notification,
+                        hide_from_history = false,
+                    }
+                )
+            end
+
+            dap.listeners.before["event_progressEnd"]["progress-notifications"] = function(
+                session,
+                body
+            )
+                local notif_data = helpers.client_notifs["dap"][body.progressId]
+                notif_data.notification = vim.notify(
+                    body.message and helpers.format_message(body.message)
+                        or "Complete",
+                    "info",
+                    {
+                        icon = "",
+                        replace = notif_data.notification,
+                        timeout = 3000,
+                    }
+                )
+                notif_data.spinner = nil
             end
 
             dap.adapters.cppdbg = {
@@ -201,7 +259,7 @@ return {
     {
         "jay-babu/mason-nvim-dap.nvim",
         dependencies = {
-            "williamboman/mason.nvim",
+            "mason-org/mason.nvim",
             "mfussenegger/nvim-dap",
         },
         opts = {

@@ -2,13 +2,13 @@ return {
     {
         "mfussenegger/nvim-lint",
         dependencies = {
-            "williamboman/mason.nvim",
+            "mason-org/mason.nvim",
         },
         config = function()
             local lint = require("lint")
             lint.linters_by_ft = {
                 markdown = { "markdownlint" },
-                python = { "flake8" },
+                python = { "flake8", "pylint" },
                 typescript = { "eslint_d" },
                 javascript = { "eslint_d" },
                 json = { "jsonlint" },
@@ -27,7 +27,7 @@ return {
         "rshkarin/mason-nvim-lint",
         dependencies = {
             "mfussenegger/nvim-lint",
-            "williamboman/mason.nvim",
+            "mason-org/mason.nvim",
         },
         config = function()
             require("mason-nvim-lint").setup()

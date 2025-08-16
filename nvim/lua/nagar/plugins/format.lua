@@ -2,7 +2,7 @@ return {
     {
         "stevearc/conform.nvim",
         dependencies = {
-            "williamboman/mason.nvim",
+            "mason-org/mason.nvim",
         },
         config = function()
             local conform = require("conform")
@@ -32,7 +32,7 @@ return {
         "zapling/mason-conform.nvim",
         dependencies = {
             "stevearc/conform.nvim",
-            "williamboman/mason.nvim",
+            "mason-org/mason.nvim",
         },
         config = function()
             require("mason").setup()

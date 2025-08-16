@@ -1,6 +1,5 @@
 return {
     "Civitasv/cmake-tools.nvim",
-    commit = "d6fa30479c5f392f6f80b4b2e542f91155b289a8",
     config = function()
         local osys = require("cmake-tools.osys")
         require("cmake-tools").setup({
@@ -8,7 +7,9 @@ return {
             ctest_command = "ctest", -- this is used to specify ctest command path
             cmake_use_preset = true,
             cmake_regenerate_on_save = true, -- auto generate when save CMakeLists.txt
-            cmake_generate_options = { "-DCMAKE_EXPORT_COMPILE_COMMANDS=1" }, -- this will be passed when invoke `CMakeGenerate`
+            cmake_generate_options = {
+                "-DCMAKE_EXPORT_COMPILE_COMMANDS=1 -G Ninja",
+            }, -- this will be passed when invoke `CMakeGenerate`
             cmake_build_options = {}, -- this will be passed when invoke `CMakeBuild`
             -- support macro expansion:
             --       ${kit}

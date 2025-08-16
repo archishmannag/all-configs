@@ -1,8 +1,4 @@
--- disable netrw at the very start of your init.lua
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
-require("nagar.remap")
+require("nagar.config.options")
+require("nagar.config.keybinds")
+require("nagar.config.autocmds")
 require("nagar.lazy")
-
-
