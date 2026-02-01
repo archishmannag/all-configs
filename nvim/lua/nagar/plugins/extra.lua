@@ -1,9 +1,38 @@
 return {
     {
+        "MeanderingProgrammer/render-markdown.nvim",
+        opts = {
+            file_types = { "markdown", "Avante" },
+        },
+        ft = { "markdown", "Avante" },
+    },
+    {
+        "saghen/blink.indent",
+        --- @module 'blink.indent'
+        --- @type blink.indent.Config
+        opts = {},
+    },
+    {
         "mbbill/undotree",
         config = function()
             vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
             vim.o.undofile = true
+        end,
+    },
+    {
+        "danymat/neogen",
+        config = function()
+            require("neogen").setup({
+                snippet_engine = "luasnip",
+            })
+
+            local opts = { noremap = true, silent = true }
+            vim.api.nvim_set_keymap(
+                "n",
+                "<Leader>k",
+                ":lua require('neogen').generate()<CR>",
+                opts
+            )
         end,
     },
     {
@@ -21,6 +50,33 @@ return {
     },
     {
         "L3MON4D3/LuaSnip",
+        build = vim.fn.has("win32") ~= 0 and "make install_jsregexp" or nil,
+        dependencies = {
+            "rafamadriz/friendly-snippets",
+            "benfowler/telescope-luasnip.nvim",
+        },
+        config = function(_, opts)
+            if opts then
+                require("luasnip").config.setup(opts)
+            end
+            vim.tbl_map(function(type)
+                require("luasnip.loaders.from_" .. type).lazy_load()
+            end, { "vscode", "snipmate", "lua" })
+            -- friendly-snippets - enable standardized comments snippets
+            require("luasnip").filetype_extend("typescript", { "tsdoc" })
+            require("luasnip").filetype_extend("javascript", { "jsdoc" })
+            require("luasnip").filetype_extend("lua", { "luadoc" })
+            require("luasnip").filetype_extend("python", { "pydoc" })
+            require("luasnip").filetype_extend("rust", { "rustdoc" })
+            require("luasnip").filetype_extend("cs", { "csharpdoc" })
+            require("luasnip").filetype_extend("java", { "javadoc" })
+            require("luasnip").filetype_extend("c", { "cdoc" })
+            require("luasnip").filetype_extend("cpp", { "cppdoc" })
+            require("luasnip").filetype_extend("php", { "phpdoc" })
+            require("luasnip").filetype_extend("kotlin", { "kdoc" })
+            require("luasnip").filetype_extend("ruby", { "rdoc" })
+            require("luasnip").filetype_extend("sh", { "shelldoc" })
+        end,
     },
     {
         "saadparwaiz1/cmp_luasnip",
@@ -53,7 +109,7 @@ return {
                 suggestion = {
                     auto_trigger = true,
                     keymap = {
-                        accept = "<Tab>",
+                        accept = false,
                         accept_word = "<M-Right>",
                         accept_line = "<M-C-Right>",
                         next = "<M-]>",
@@ -61,6 +117,20 @@ return {
                     },
                 },
             })
+
+            -- Conditional <Tab> mapping
+            vim.keymap.set("i", "<Tab>", function()
+                local copilot = require("copilot.suggestion")
+                local ok_cmp, cmp = pcall(require, "cmp")
+
+                if copilot.is_visible() then
+                    copilot.accept()
+                elseif ok_cmp and cmp.visible() then
+                    cmp.confirm({ select = true })
+                else
+                    return "<Tab>"
+                end
+            end, { expr = true, silent = true })
         end,
     },
     {
@@ -85,7 +155,6 @@ return {
     },
     {
         "folke/noice.nvim",
-        event = "VeryLazy",
         opts = {
             -- add any options here
         },
@@ -124,14 +193,14 @@ return {
         config = function()
             require("presence").setup({
                 auto_update = true,
-                neovim_image_text = "The One True Text Editor",
-                main_image = "neovim",
+                neovim_image_text = "Neovim",
+                main_image = "file",
                 show_time = true,
 
                 -- Rich Presence text options
                 editing_text = "Editing %s",
                 file_explorer_text = "Browsing %s",
-                git_commit_text = "",
+                git_commit_text = "Getting gitty with it",
                 plugin_manager_text = "Managing plugins",
                 reading_text = "Reading %s",
                 workspace_text = "Working on %s",

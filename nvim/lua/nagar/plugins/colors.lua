@@ -6,6 +6,14 @@ return {
         config = function()
             require("catppuccin").setup({
                 auto_integrations = true,
+                custom_highlights = function(colors)
+                    return {
+                        ["@comment.documentation"] = {
+                            fg = colors.flamingo,
+                            italic = true,
+                        },
+                    }
+                end,
             })
             vim.cmd.colorscheme("catppuccin-macchiato")
         end,

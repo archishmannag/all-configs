@@ -3,6 +3,7 @@ return {
         "neovim/nvim-lspconfig",
         "hrsh7th/cmp-nvim-lsp",
         "hrsh7th/cmp-nvim-lsp-signature-help",
+        "hrsh7th/cmp-path",
     },
     {
         "mason-org/mason-lspconfig.nvim",
@@ -71,6 +72,7 @@ return {
                     { name = "luasnip" },
                     { name = "render-markdown" },
                     { name = "nvim_lsp_signature_help" },
+                    { name = "path" },
                 }, {
                     { name = "buffer" },
                 }),

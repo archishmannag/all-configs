@@ -7,15 +7,18 @@ return {
             return "make BUILD_FROM_SOURCE=true"
         end
     end,
-    event = "VeryLazy",
     version = false, -- Never set this value to "*"! Never!
     opts = {
-        provider = "ollama",
+        provider = "copilot",
         providers = {
             ollama = {
                 endpoint = "http://localhost:11434",
-                model = "deepseek-coder:6.7b-instruct-q4_K_M",
+                -- model = "deepseek-coder:6.7b-instruct-q4_K_M",
+                model = "mistral:7b-instruct-q4_K_M",
             },
+        },
+        web_search_engine = {
+            provider = "google",
         },
     },
     dependencies = {
@@ -29,7 +32,6 @@ return {
         {
             -- support for image pasting
             "HakonHarnes/img-clip.nvim",
-            event = "VeryLazy",
             opts = {
                 -- recommended settings
                 default = {

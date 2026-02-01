@@ -1,13 +1,12 @@
 return {
     "nvim-telescope/telescope.nvim",
-    tag = "0.1.8",
-    -- or                              , branch = '0.1.x',
+    -- tag = "0.2.1",
     dependencies = {
         "nvim-lua/plenary.nvim",
         "nvim-tree/nvim-web-devicons",
         {
             "nvim-telescope/telescope-fzf-native.nvim",
-            build = "cmake -s. -bbuild -dcmake_build_type=release && cmake --build build --config release",
+            build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release --target install",
         },
     },
     config = function()

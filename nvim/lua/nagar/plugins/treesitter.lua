@@ -1,19 +1,13 @@
 return {
     {
-        'nvim-treesitter/nvim-treesitter-refactor',
-        dependencies = {
-            'nvim-treesitter/nvim-treesitter',
-        },
-    },
-    {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         config = function()
-            require 'nvim-treesitter.configs'.setup {
+            require("nvim-treesitter").setup({
                 modules = {},
                 ignore_install = {},
                 -- A list of parser names, or "all" (the listed parsers MUST always be installed)
-                ensure_installed = { "c", "javascript", "typescript", "cmake", "cpp", "java", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline" },
+                ensure_installed = "all",
 
                 -- Install parsers synchronously (only applied to `ensure_installed`)
                 sync_install = false,
@@ -23,7 +17,7 @@ return {
                 auto_install = true,
 
                 indent = {
-                    enable = true
+                    enable = true,
                 },
                 highlight = {
                     enable = true,
@@ -38,12 +32,11 @@ return {
                         },
                     },
                 },
-            }
-            vim.opt.foldmethod = "expr"
-            vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-            vim.opt.foldtext = ""
-            vim.opt.foldlevel = 99
-            vim.opt.foldlevelstart = 99
-        end
-    }
+            })
+
+            vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+            vim.wo[0][0].foldmethod = "expr"
+            vim.wo[0][0].foldlevel = 999
+        end,
+    },
 }

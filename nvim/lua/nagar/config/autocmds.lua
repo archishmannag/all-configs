@@ -34,8 +34,43 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
+-- Automatically install and enable nvim-treesitter for supported filetypes
+vim.api.nvim_create_autocmd("FileType", {
+    callback = function(args)
+        local treesitter = require("nvim-treesitter")
+        local lang = vim.treesitter.language.get_lang(args.match)
+        if vim.list_contains(treesitter.get_available(), lang) then
+            if not vim.list_contains(treesitter.get_installed(), lang) then
+                treesitter.install(lang):wait()
+            end
+            vim.treesitter.start(args.buf)
+        end
+    end,
+    desc = "Enable nvim-treesitter and install parser if not installed",
+})
+
 -- Set the floating window background color
 vim.cmd([[autocmd! ColorScheme * highlight NormalFloat guibg=#1f2335]])
 vim.cmd(
     [[autocmd! ColorScheme * highlight FloatBorder guifg=white guibg=#1f2335]]
 )
+
+-- Restart clangd after CMakeTools finishes a build
+vim.api.nvim_create_autocmd("User", {
+    pattern = "CMakeToolsBuildFinished",
+    callback = function()
+        -- Find all active clangd clients
+        for _, client in ipairs(vim.lsp.get_clients()) do
+            if client.name == "clangd" then
+                vim.lsp.stop_client(client.id, true)
+            end
+        end
+
+        -- Re-open buffer to trigger LSP reattach
+        vim.defer_fn(function()
+            vim.cmd("edit")
+        end, 100)
+
+        print("[cmake-tools] Build finished → clangd restarted")
+    end,
+})
