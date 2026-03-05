@@ -22,6 +22,11 @@ return {
                 enable = true,
             },
             modified = { enable = true },
+            filesystem_watchers = {
+                ignore_dirs = {
+                    "__cmake_systeminformation",
+                },
+            },
         })
         vim.keymap.set("n", "<leader>t", vim.cmd.NvimTreeOpen)
         vim.keymap.set("n", "<leader>T", vim.cmd.NvimTreeClose)

@@ -72,7 +72,24 @@ return {
         }, neotest_ns)
         require("neotest").setup({
             adapters = {
-                require("neotest-ctest").setup({}),
+                require("neotest-ctest").setup({
+                    is_test_file = function(file_path)
+                        local lib = require("neotest.lib")
+                        local elems = vim.split(
+                            file_path,
+                            lib.files.sep,
+                            { plain = true }
+                        )
+                        local name, extension = unpack(
+                            vim.split(elems[#elems], ".", { plain = true })
+                        )
+                        local supported_extensions =
+                            { "cpp", "cc", "cxx", "cppm" }
+                        return vim.tbl_contains(supported_extensions, extension)
+                                and vim.endswith(name, "_test")
+                            or false
+                    end,
+                }),
             },
         })
     end,

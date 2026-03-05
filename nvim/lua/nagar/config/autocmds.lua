@@ -44,6 +44,10 @@ vim.api.nvim_create_autocmd("FileType", {
                 treesitter.install(lang):wait()
             end
             vim.treesitter.start(args.buf)
+
+            vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+            vim.wo[0][0].foldmethod = "expr"
+            vim.wo[0][0].foldlevel = 999
         end
     end,
     desc = "Enable nvim-treesitter and install parser if not installed",
